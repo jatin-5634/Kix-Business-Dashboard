@@ -1,0 +1,120 @@
+Kix Retail — Sales Performance Analysis Dashboard
+
+An end-to-end sales analytics project built in Excel using Power Query, Power Pivot (Data Model), and DAX, with interactive dashboards for revenue, target, and refund performance across stores, products, and time.
+
+Problem Statement
+
+Kix Retail operates across multiple stores and product categories but had no consolidated way to see whether stores were hitting their monthly revenue targets, which products or salespeople were driving performance, and where refunds were eating into profit. Sales, target, product, customer, and roster data lived in separate flat tables with no relationships between them, making it difficult to answer basic questions like:
+
+Are we tracking ahead of or behind target, overall and by store/month?
+Which stores are underperforming against their targets, and by how much?
+How much of revenue comes from weekday vs. weekend trading?
+What is the refund rate, and how much margin does it cost?
+Which products, salespeople, and months contribute most to revenue?
+
+This project builds a single connected data model from the raw tables and a set of dashboards to answer these questions on demand, instead of manually recompiling numbers every month.
+
+Data Model
+
+The workbook uses Power Pivot to build a star-schema data model, connecting one central fact table to several supporting dimension tables via Power Query:
+
+Table	Role	Purpose
+fact_table	Fact	Transaction-level sales records (revenue, quantity, refunds, etc.)
+Date	Dimension	Calendar table (day, month name, weekday/weekend flag) for time intelligence
+Dim_customers	Dimension	Customer attributes
+products_table	Dimension	Product / category attributes
+sales_persons_table	Dimension	Store and salesperson attributes
+monthly_store_targets	Dimension/Reference	Monthly revenue target per store
+Calculations	Measures table	Holds the DAX measures used across all dashboards
+
+Relationships were built between the fact table and each dimension (typically one-to-many) so that a single slicer selection (store, month, category, weekday/weekend) filters every visual consistently — the core benefit of moving from flat tables to a proper data model.
+
+Key DAX measures created: Total Revenue, Total Target, COGS, Profit Margin, Profit Margin %, Total Refund, Refund Rate, Transactions, Products, Total Qty Sold, Total Qty Returned.
+
+Dashboards
+Kix Business Dashboard — overall KPI dashboard
+Sales Analysis Dashboard — store/product/time drill-down with slicers
+Analysis 1 / Analysis 2 — supporting PivotTables (revenue vs. target, store performance, weekday/weekend split, monthly trend)
+Waffle Chart — weekday vs. weekend revenue mix, visualized as a 10x10 waffle grid
+Findings (Numeric Summary)
+Overall Performance (Full Year)
+Metric	Value
+Total Revenue	₹54,46,809.47
+Total Target	₹52,54,990.00
+Variance vs. Target	+₹1,91,819.47 (+3.65%, ahead of target)
+COGS	₹31,49,297.41
+Profit Margin	₹22,97,512.06
+Profit Margin %	42.18%
+Transactions	20,000
+Total Refund	₹4,38,297.51
+Refund Rate	8.05%
+Products Sold (SKUs)	100
+Total Qty Sold	6,06,148 units
+Total Qty Returned	48,662 units
+Revenue by Store (vs. Target)
+Store	Revenue	Target	Result
+Myers-Lopez	5,65,168.15	4,45,958	Ahead
+Valdez	5,58,181.42	5,04,552	Ahead
+Lee-Myers	5,48,423.82	4,18,186	Ahead
+Miller	5,47,475.30	6,46,080	Behind
+Lopez	5,45,095.26	4,19,431	Ahead
+Barron-Fleming	5,46,574.63	4,22,011	Ahead
+Thomas	5,37,047.06	4,85,684	Ahead
+Martinez	5,36,475.90	6,01,307	Behind
+Novak PLC	5,36,180.93	7,11,271	Behind (largest gap)
+Berg-Trujillo	5,26,187.00	6,00,510	Behind (-12.4%)
+
+Novak PLC and Berg-Trujillo have the two largest shortfalls against target — Berg-Trujillo is highlighted separately in the dashboard as the flagship "at-risk" store, tracking 12.4% below its monthly target.
+
+Monthly Revenue Trend (Company-wide)
+Month	Revenue
+Jan	4,44,162.52
+Feb	4,23,741.52
+Mar	4,68,344.27
+Apr	4,48,652.76
+May	4,80,720.64 (peak)
+Jun	4,55,501.14
+Jul	4,33,725.86
+Aug	4,85,766.25 (peak)
+Sep	4,43,447.43
+Oct	4,58,984.38
+Nov	4,62,537.41
+Dec	4,41,225.29
+
+Revenue is fairly stable month-to-month (₹4.2L–₹4.9L range), with August the strongest month and February the weakest.
+
+Berg-Trujillo Store — Monthly Revenue vs. Target (drill-down on the weakest store)
+Month	Revenue	Target	Variance
+Jan	40,299.58	58,884	-31.6%
+Feb	44,995.01	48,921	-8.0%
+Mar	42,429.64	40,240	+5.4%
+Apr	44,533.37	51,463	-13.5%
+May	47,986.96	42,829	+12.0%
+Jun	47,623.31	41,880	+13.7%
+Jul	37,578.87	57,096	-34.2%
+Aug	47,346.00	49,810	-4.9%
+Sep	37,484.26	48,154	-22.2%
+Oct	47,193.96	58,298	-19.0%
+Nov	50,601.92	52,960	-4.5%
+Dec	38,114.12	49,975	-23.7%
+
+This store missed target in 9 of 12 months, with the worst misses in January, July, September, and December (all -22% or worse) — suggesting a recurring seasonal or operational issue rather than a one-off.
+
+Weekday vs. Weekend Split
+Segment	Share of Revenue	Revenue
+Weekday	71.5%	38,94,278.13
+Weekend	28.5%	15,52,531.34
+
+Weekday trading drives roughly 7 out of every 10 rupees of revenue — visualized in the waffle chart.
+
+Key Takeaways
+The business is ahead of target overall (+3.65%), but that headline number masks store-level trouble: 4 of 10 stores are behind target, with Novak PLC and Berg-Trujillo the biggest gaps.
+Berg-Trujillo underperforms consistently, not seasonally — it missed target in 9 of 12 months, pointing to a store-specific issue worth investigating (staffing, footfall, local competition).
+Refund rate (8.05%) is material against a 42.18% margin — reducing refunds even modestly would have a direct, outsized effect on profit.
+Weekday trading dominates revenue (71.5%), which should inform staffing and promotional timing.
+Revenue is stable across months with no extreme seasonality, aside from a dip in February.
+Tools & Skills Used
+Excel Power Query — data import and cleaning from source tables
+Excel Power Pivot / Data Model — star-schema relationships between fact and dimension tables
+DAX — custom measures (Total Revenue, Profit Margin %, Refund Rate, etc.)
+PivotTables & PivotCharts — dashboard visuals
